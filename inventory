@@ -1,0 +1,1 @@
+droplet ansible_ssh_host=198.199.79.246 ansible_ssh_user=root ansible_ssh_private_key_file=./keys/hw1.key

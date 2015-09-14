@@ -1,5 +1,8 @@
 var needle = require("needle");
 var os   = require("os");
+var fs = require('fs');
+var sleep = require('sleep');
+
 
 var config = {};
 config.token = "22e87341d8662ea4d49d35dc2fcaccf6a6e50d7e43bb486509e50a1639d3e234";
@@ -121,6 +124,24 @@ var client =
  		//console.log( JSON.stringify( body, null, 3 ) );
                 dropletCreatedId = body.droplet.id;
                 console.log(dropletCreatedId);
+                sleep.sleep(10);
+		client.getDropletIp( dropletCreatedId, function(error, response)
+		{
+			var data = response.body;
+			if( response.headers )
+			{
+				console.log( "Calls remaining", response.headers["ratelimit-remaining"] );
+			}
+ 			var dropletIp = data.droplet.networks.v4[0];   
+			console.log(dropletIp["ip_address"]);
+                	var inv = "droplet ansible_ssh_host="+dropletIp["ip_address"]+" ansible_ssh_user=root ansible_ssh_private_key_file=./keys/hw1.key"
+			fs.writeFile("inventory", inv, function(err) {
+    				if(err) {
+        				return console.log(err);
+    				}
+    				console.log("The file was saved!");
+			}); 
+		});
  	}
  });
 
