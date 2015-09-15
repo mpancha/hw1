@@ -14,8 +14,6 @@ import webbrowser
 class deployment:
    """Deployment class """
    def __init__(self):
-      self.aws_access = 'AKIAI6HVXS3JHOZYQF6Q'
-      self.aws_secret = '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'
       self.digital_token = "22e87341d8662ea4d49d35dc2fcaccf6a6e50d7e43bb486509e50a1639d3e234"
       self.droplet=''
       self.aws_con=''
@@ -82,57 +80,66 @@ class deployment:
       return None
 
 def main(argv):
-   d = deployment()
-   print "Clean up stale reservations...*****************\n"
-   d.destroy_aws_instance()
-   d.destroy_digital_instance()
-   if len(argv)>1:
+   #parse args
+   phase = 0
+   if len(argv)!=2:
       exit(1)
-   print "\nCreating digitalocean droplet...**************"
-   d.create_digital_instance()
-   print "\nCreating AWS EC2 instance...******************"
-   d.create_aws_instance()
-   print "\nCheck Droplet status...***********************"
-   dropletIp = d.get_digital_reservation()
-   while dropletIp == None:
-      print "Droplet not ready, will retry after 30 sec" 
-      time.sleep(30)
+   if argv[1]=="clean":
+      phase = 0
+   elif argv[1] == "inventory":
+      phase = 1
+   elif argv[1] == "deploy":
+      phase = 2
+   if phase == 0 or phase == 1:
+      d = deployment()
+      print "Clean up stale reservations...*****************\n"
+      d.destroy_aws_instance()
+      d.destroy_digital_instance()
+   if phase == 1:
+      print "\nCreating digitalocean droplet...**************"
+      d.create_digital_instance()
+      print "\nCreating AWS EC2 instance...******************"
+      d.create_aws_instance()
+      print "\nCheck Droplet status...***********************"
       dropletIp = d.get_digital_reservation()
-   print "Droplet IP ="+dropletIp
-   print "\nCheck AWS instance status...******************"
-   aws_ip = d.get_aws_reservation()
-   while aws_ip == None:
-      print "AWS Instance not ready, retry after 30 sec"
-      time.sleep(30)
+      while dropletIp == None:
+         print "Droplet not ready, will retry after 30 sec" 
+         time.sleep(30)
+         dropletIp = d.get_digital_reservation()
+      print "Droplet IP ="+dropletIp
+      print "\nCheck AWS instance status...******************"
       aws_ip = d.get_aws_reservation()
-   print "AWS instance IP =" + aws_ip
+      while aws_ip == None:
+         print "AWS Instance not ready, retry after 30 sec"
+         time.sleep(30)
+         aws_ip = d.get_aws_reservation()
+      print "AWS instance IP =" + aws_ip
    
-   digital_inv = "droplet ansible_ssh_host="+dropletIp+" ansible_ssh_user=root ansible_ssh_private_key_file=./keys/hw1.key\n"
-   aws_inv = "aws ansible_ssh_host="+aws_ip+" ansible_ssh_user=ubuntu ansible_ssh_private_key_file=./keys/aws_hw1.key"
+      digital_inv = "droplet ansible_ssh_host="+dropletIp+" ansible_ssh_user=root ansible_ssh_private_key_file=./keys/hw1.key\n"
+      aws_inv = "aws ansible_ssh_host="+aws_ip+" ansible_ssh_user=ubuntu ansible_ssh_private_key_file=./keys/aws_hw1.key"
    
-   print "\nWriting Inventory...**************************"
-   with open("inventory","w") as f:
-      f.write(digital_inv)
-      f.write(aws_inv)
-
-   utils.VERBOSITY = 0
-   playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
-   stats = callbacks.AggregateStats()
-   runner_cb = callbacks.PlaybookRunnerCallbacks(stats, verbose=utils.VERBOSITY)
-   inventory = Inventory('inventory')
-
-   time.sleep(30)
-   print "\nRun Ansible PlayBook...**********************"
-   pb = PlayBook(playbook='server_play.yml',
+      print "\nWriting Inventory...**************************"
+      with open("inventory","w") as f:
+         f.write(digital_inv)
+         f.write(aws_inv)
+   if phase == 2:
+      utils.VERBOSITY = 0
+      playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
+      stats = callbacks.AggregateStats()
+      runner_cb = callbacks.PlaybookRunnerCallbacks(stats, verbose=utils.VERBOSITY)
+      inventory = Inventory('inventory')
+      print "\nRun Ansible PlayBook...**********************"
+      pb = PlayBook(playbook='server_play.yml',
               inventory=inventory,
               callbacks=playbook_cb,
               runner_callbacks=runner_cb,
               stats=stats
-        )
-   pb.run()	
-   print "\nOpening web browser...***********************"
-   webbrowser.open_new_tab("http://"+aws_ip)
-   webbrowser.open_new_tab("http://"+dropletIp)
+           )
+      pb.run()	
+      print "\nOpening web browser...***********************"
+      for host in inventory.get_hosts():
+          print "Opening nginx page on ", host.name,  host.vars['ansible_ssh_host']
+          webbrowser.open_new_tab("http://"+host.vars['ansible_ssh_host'])
 
 if __name__=="__main__":
    main(sys.argv)
