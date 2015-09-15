@@ -1,0 +1,3 @@
+boto
+python-digitalocean
+ansible
