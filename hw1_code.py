@@ -135,6 +135,7 @@ def main(argv):
          f.write(digital_inv)
          f.write(aws_inv)
    if phase == 2:
+      os.environ['ANSIBLE_HOST_KEY_CHECKING']="false"
       utils.VERBOSITY = 0
       playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
       stats = callbacks.AggregateStats()
