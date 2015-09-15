@@ -14,12 +14,19 @@ How to Run
    ```
    ./setup.sh
    ```
-2. Generate Inventory by spinning instance on AWS and digitalocean
+2. Create rootkey.csv file in keys directory with following format.
+
+  ```
+  AWS_ACCESS_KEY_ID=<aws access key id>
+  AWS_SECRET_KEY=<aws secret key>
+  digital_token=<digitalocean token>
+  ```
+3. Generate Inventory by spinning instance on AWS and digitalocean
 
    ```
    ./hw1_code.py inventory
    ```
-3. Deploy nginx on hosts from generated inventory
+4. Deploy nginx on hosts from generated inventory
    
    ```
    ./hw1_code.py deploy
