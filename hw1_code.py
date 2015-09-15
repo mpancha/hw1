@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 import sys
 import boto.ec2
 import subprocess
@@ -13,8 +14,8 @@ import webbrowser
 
 class deployment:
    """Deployment class """
-   def __init__(self):
-      self.digital_token = "22e87341d8662ea4d49d35dc2fcaccf6a6e50d7e43bb486509e50a1639d3e234"
+   def __init__(self, d_token):
+      self.digital_token = d_token
       self.droplet=''
       self.aws_con=''
       self.aws_image = 'ami-d05e75b8'
@@ -90,8 +91,19 @@ def main(argv):
       phase = 1
    elif argv[1] == "deploy":
       phase = 2
+   with open("keys/rootkey.csv","r") as keyfile:
+      lines = keyfile.readlines()
+      aws_access_key = lines[0].split('=')[1].strip(' ').rstrip()
+      print aws_access_key
+      aws_secret_key = lines[1].split('=')[1].strip(' ').rstrip()
+      print aws_secret_key
+      d_token = lines[2].split('=')[1].strip(' ').rstrip()
+      print d_token
+   os.environ['AWS_ACCESS_KEY_ID']= aws_access_key
+   os.environ['AWS_SECRET_ACCESS_KEY']= aws_secret_key
+   
    if phase == 0 or phase == 1:
-      d = deployment()
+      d = deployment(d_token)
       print "Clean up stale reservations...*****************\n"
       d.destroy_aws_instance()
       d.destroy_digital_instance()
