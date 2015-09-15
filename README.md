@@ -1,11 +1,18 @@
 # hw1
-DevOps HW1
+
+AWS service
+-----------
+CodeDeploy
+- 
 
 Requirements
 ------------
-Must have following installed
-1. Python
-2. pip installed
+Platform : Ubuntu 14.04.
+
+Must have installed
+
+1. Python v2.7
+2. pip 
 
 How to Run
 ----------
