@@ -1,4 +1,9 @@
-# homework 1
+# Homework 1
+Deliverables
+------------
+1. [Code](hw1_code.py)
+2. [Ansible Playbook](server_play.yml)
+3. [Screencast](final_screencast.mp4)
 
 Requirements
 ------------
