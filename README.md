@@ -1,14 +1,7 @@
-# hw1
-
-AWS service
------------
-CodeDeploy
-- 
+# homework 1
 
 Requirements
 ------------
-Platform : Ubuntu 14.04.
-
 Must have installed
 
 1. Python v2.7
@@ -17,6 +10,7 @@ Must have installed
 How to Run
 ----------
 1. Clone this repo 
+
    ```
    git clone https://github.com/mpancha/hw1.git
    ```
@@ -28,7 +22,8 @@ How to Run
   digital_token=<digitalocean token>
   ```
 3. Setup Environment
-   - Makes sure all dependencies are satisfies as per requirement.txt 
+   - Makes sure all dependencies are satisfies as per [requirement.txt](requirement.txt) 
+
    ```
    ./setup.sh
    ```
@@ -38,7 +33,7 @@ How to Run
    ./hw1_code.py inventory
    ```
 5. Deploy nginx on hosts from generated inventory
-   
+
    ```
    ./hw1_code.py deploy
    ```
