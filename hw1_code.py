@@ -94,11 +94,11 @@ def main(argv):
    with open("keys/rootkey.csv","r") as keyfile:
       lines = keyfile.readlines()
       aws_access_key = lines[0].split('=')[1].strip(' ').rstrip()
-      print aws_access_key
+      #print aws_access_key
       aws_secret_key = lines[1].split('=')[1].strip(' ').rstrip()
-      print aws_secret_key
+      #print aws_secret_key
       d_token = lines[2].split('=')[1].strip(' ').rstrip()
-      print d_token
+      #print d_token
    os.environ['AWS_ACCESS_KEY_ID']= aws_access_key
    os.environ['AWS_SECRET_ACCESS_KEY']= aws_secret_key
    
