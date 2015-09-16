@@ -16,10 +16,9 @@ Must have installed
 
 How to Run
 ----------
-1. Setup Environment
-   - Makes sure all dependencies are satisfies as per requirement.txt 
+1. Clone this repo 
    ```
-   ./setup.sh
+   git clone https://github.com/mpancha/hw1.git
    ```
 2. Create rootkey.csv file in keys directory with following format.
 
@@ -28,14 +27,22 @@ How to Run
   AWS_SECRET_KEY=<aws secret key>
   digital_token=<digitalocean token>
   ```
-3. Generate Inventory by spinning instance on AWS and digitalocean
+3. Setup Environment
+   - Makes sure all dependencies are satisfies as per requirement.txt 
+   ```
+   ./setup.sh
+   ```
+4. Generate Inventory by spinning instance on AWS and digitalocean
 
    ```
    ./hw1_code.py inventory
    ```
-4. Deploy nginx on hosts from generated inventory
+5. Deploy nginx on hosts from generated inventory
    
    ```
    ./hw1_code.py deploy
    ```
 
+Screencast
+----------
+[screencast](https://github.com/mpancha/hw/final_screencast.mp4)
