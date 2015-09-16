@@ -152,7 +152,8 @@ def main(argv):
       print "\nOpening web browser...***********************"
       for host in inventory.get_hosts():
           print "Opening nginx page on ", host.name,  host.vars['ansible_ssh_host']
-          webbrowser.open_new_tab("http://"+host.vars['ansible_ssh_host'])
+          webbrowser.open_new("http://"+host.vars['ansible_ssh_host'])
+          time.sleep(1)
 
 if __name__=="__main__":
    main(sys.argv)
