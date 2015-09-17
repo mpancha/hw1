@@ -5,6 +5,10 @@ Deliverables
 2. [Ansible Playbook](server_play.yml)
 3. [Screencast](final_screencast.mp4)
 
+Amazon EC2
+-----------
+Amazon Elastic Compute Cloud is on-demand compute service from Amazon. It provides scalable and flexible compute service which can be payed only for the capacity you actually use. EC2 instance can be provisioned easily from aws web interface or using AWS API.
+
 Requirements
 ------------
 Must have installed
